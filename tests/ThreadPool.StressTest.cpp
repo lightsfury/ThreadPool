@@ -2,8 +2,6 @@
 
 #include "ThreadPool/ThreadPool.h"
 
-#pragma comment(lib, "ThreadPool_static")
-
 struct LockableFile
 {
 	boost::mutex Lock;

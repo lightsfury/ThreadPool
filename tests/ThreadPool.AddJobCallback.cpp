@@ -2,8 +2,6 @@
 
 #include "ThreadPool/ThreadPool.h"
 
-#pragma comment(lib, "ThreadPool_static")
-
 void UnitTest::SetupInformation()
 {
 	Info.FileName = __FILE__;

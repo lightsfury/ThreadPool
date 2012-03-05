@@ -2,10 +2,6 @@
 
 #include "ThreadPool/ThreadPool.h"
 
-#include <boost/utility/result_of.hpp>
-
-#pragma comment(lib, "ThreadPool_static")
-
 void UnitTest::SetupInformation()
 {
 	Info.FileName = __FILE__;
