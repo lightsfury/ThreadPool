@@ -23,6 +23,7 @@ int Answer()
 
 void AnswerCallback(boost::shared_ptr<LockableFile> ptr)
 {
+	boost::mutex::scoped_lock lock(ptr->Lock);
 	fprintf(ptr->File, "In callback\n");
 }
 
@@ -36,7 +37,6 @@ bool UnitTest::RunTest(FILE* err)
 	//*
 	fprintf(err, "Adding a job\n");
 	boost::shared_future<int> future = pool.AddJob(&Answer, boost::bind(&AnswerCallback, ptr));
-	//boost::unique_future<int> future = pool.AddJob(&Answer);
 
 	fprintf(err, "Waiting on future\n");
 	future.wait();

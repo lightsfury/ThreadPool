@@ -5,6 +5,7 @@
 #include <boost/thread.hpp>
 #include <boost/function.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/utility/result_of.hpp>
 
 #include <queue>
 
@@ -30,6 +31,45 @@ namespace ThreadPool
 		ThreadPool();
 		~ThreadPool();
 
+		template<class FunctorType>
+		boost::shared_future<typename boost::result_of<FunctorType()>::type> AddJob(FunctorType f)
+		{
+			typedef boost::result_of<FunctorType()>::type ReturnType;
+			typedef boost::packaged_task<ReturnType> task_t;
+			typedef boost::shared_ptr<task_t > taskptr_t;
+			typedef boost::shared_future<ReturnType> future_t;
+			typedef boost::function<void()> function_t;
+
+			taskptr_t task(new task_t(f));
+			future_t future(task->get_future());
+			function_t func(boost::bind(&task_t::operator(), task));
+
+			PushJob(func);
+
+			return future;
+		}
+
+		template<class FunctorType, class CallbackType>
+		boost::shared_future<typename boost::result_of<FunctorType()>::type> AddJob(FunctorType f, CallbackType c)
+		{
+			typedef boost::result_of<FunctorType()>::type ReturnType;
+			typedef boost::packaged_task<ReturnType> task_t;
+			typedef boost::shared_ptr<task_t > taskptr_t;
+			typedef boost::shared_future<ReturnType> future_t;
+			typedef boost::function<void()> function_t;
+
+			taskptr_t task(new task_t(f));
+			future_t future(task->get_future());
+			function_t func(boost::bind(&task_t::operator(), task));
+
+			task->set_wait_callback(c);
+
+			PushJob(func);
+
+			return future;
+		}
+
+		/*
 		template<class ReturnType, class FunctorType>
 		boost::shared_future<ReturnType> AddJob(FunctorType& f)
 		{
@@ -84,7 +124,7 @@ namespace ThreadPool
 		boost::shared_future<ReturnType> AddJob(ReturnType (*f)(), CallbackType& c)
 		{
 			return AddJob<ReturnType, ReturnType (*)(), CallbackType>(f, c);
-		}
+		} // */
 
 		void Close();
 		void Terminate();

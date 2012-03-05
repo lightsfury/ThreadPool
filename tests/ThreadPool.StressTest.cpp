@@ -46,12 +46,12 @@ bool UnitTest::RunTest(FILE* err)
 	
 	Answers_t answers;
 	
-	uint32_t numJobs = 1024;
+	uint32_t numJobs = 128;
 	
 	fprintf(err, "Adding %d jobs\n", numJobs);
 	for (uint32_t i = 0; i < numJobs; i++)
 	{
-		answers.push_back(pool.AddJob<int>(boost::bind(&Answer, file, i), boost::bind(&WaitAnswer, file, i)));
+		answers.push_back(pool.AddJob(boost::bind(&Answer, file, i), boost::bind(&WaitAnswer, file, i)));
 	}
 	
 	file->Lock.lock();
