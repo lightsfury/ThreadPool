@@ -20,7 +20,7 @@ int Answer()
 template<class Functor>
 bool TestThreadPoolAdd(FILE* err, ThreadPool::ThreadPool& pool, Functor f)
 {
-	typedef boost::result_of<Functor()>::type result_type;
+	typedef typename boost::result_of<Functor()>::type result_type;
 	fprintf(err, "*Adding the job\n");
 	boost::shared_future<result_type> future = pool.AddJob(f);
 

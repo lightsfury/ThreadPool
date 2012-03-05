@@ -34,7 +34,7 @@ namespace ThreadPool
 		template<class FunctorType>
 		boost::shared_future<typename boost::result_of<FunctorType()>::type> AddJob(FunctorType f)
 		{
-			typedef boost::result_of<FunctorType()>::type ReturnType;
+			typedef typename boost::result_of<FunctorType()>::type ReturnType;
 			typedef boost::packaged_task<ReturnType> task_t;
 			typedef boost::shared_ptr<task_t > taskptr_t;
 			typedef boost::shared_future<ReturnType> future_t;
@@ -52,7 +52,7 @@ namespace ThreadPool
 		template<class FunctorType, class CallbackType>
 		boost::shared_future<typename boost::result_of<FunctorType()>::type> AddJob(FunctorType f, CallbackType c)
 		{
-			typedef boost::result_of<FunctorType()>::type ReturnType;
+			typedef typename boost::result_of<FunctorType()>::type ReturnType;
 			typedef boost::packaged_task<ReturnType> task_t;
 			typedef boost::shared_ptr<task_t > taskptr_t;
 			typedef boost::shared_future<ReturnType> future_t;
