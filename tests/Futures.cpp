@@ -1,6 +1,11 @@
 #include "UnitTestBP.h"
 
-#define BOOST_NO_RVALUE_REFERENCES
+/*
+	VC10 does not play nicely with the move semantics in Boost.Thread.
+*/
+#ifdef _MSC_VER
+	#define BOOST_NO_RVALUE_REFERENCES
+#endif
 
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
@@ -22,28 +27,28 @@ int SampleTask()
 
 bool UnitTest::RunTest(FILE* err)
 {
-	fprintf(err, "Creating packaged_task\n");
+	fprintf(err, "*Creating packaged_task\n");
 	boost::packaged_task<uint32_t> pt(bind(&SampleTask));
 	
-	fprintf(err, "Grabbing future\n");
+	fprintf(err, "*Grabbing future\n");
 	boost::unique_future<uint32_t> future = pt.get_future();
 
-	fprintf(err, "Pushing task to a thread\n");
+	fprintf(err, "*Pushing task to a thread\n");
 	boost::thread task(boost::move(pt));
 
 	future.wait();
 
 	if (!future.is_ready())
 	{
-		fprintf(err, "Future is not ready\n");
+		fprintf(err, " *Future is not ready\n");
 		return false;
 	}
 
-	fprintf(err, "Future is ready\n");
+	fprintf(err, "*Future is ready\n");
 	uint32_t val = future.get();
 	if (val != 123)
 	{
-			fprintf(err, "Future.get is incorrect. Expected %d. Found %d.\n", 123, val);
+			fprintf(err, " *Future.get is incorrect. Expected %d. Found %d.\n", 123, val);
 			return false;
 	}
 

@@ -11,12 +11,15 @@ namespace ThreadPool
 	{
 		boost::mutex::scoped_lock Lock(Data->DataLock);
 		uint32_t limit = boost::thread::hardware_concurrency();
+		ThreadPtr_t threadPtr;
 		boost::thread* Thread;
 
 		for (uint32_t i = 0; i < limit; i++)
 		{
-			Thread = new boost::thread(boost::bind(&ThreadPool::WorkerThread, this));
-			Data->WorkerThreads.push_back(ThreadPtr_t(Thread));
+			threadPtr = new boost::thread(boost::bind(&ThreadPool::WorkerThread, this));
+			Data->WorkerThreads.push_back(threadPtr);
+			//Thread = new boost::thread(boost::bind(&ThreadPool::WorkerThread, this));
+			//Data->WorkerThreads.push_back(ThreadPtr_t(Thread));
 		}
 	}
 	
