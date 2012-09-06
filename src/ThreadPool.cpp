@@ -16,7 +16,7 @@ namespace ThreadPool
 
 		for (uint32_t i = 0; i < limit; i++)
 		{
-			threadPtr = new boost::thread(boost::bind(&ThreadPool::WorkerThread, this));
+			threadPtr = ThreadPtr_t(new boost::thread(boost::bind(&ThreadPool::WorkerThread, this)));
 			Data->WorkerThreads.push_back(threadPtr);
 			//Thread = new boost::thread(boost::bind(&ThreadPool::WorkerThread, this));
 			//Data->WorkerThreads.push_back(ThreadPtr_t(Thread));
